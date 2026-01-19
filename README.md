@@ -7,22 +7,27 @@
 
 ![Kokoro TTS](https://img.shields.io/badge/Kokoro-TTS-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.11+-green?style=for-the-badge&logo=python)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red?style=for-the-badge&logo=pytorch)
-![PyTorch](https://img.shields.io/badge/Espeak-1.51+-orange?style=for-the-badge)
+![ONNX Runtime](https://img.shields.io/badge/ONNX_Runtime-1.18+-red?style=for-the-badge)
+![NumPy](https://img.shields.io/badge/NumPy-1.24+-orange?style=for-the-badge&logo=numpy)
+![Espeak](https://img.shields.io/badge/Espeak-1.51+-yellow?style=for-the-badge)
 ![macOS](https://img.shields.io/badge/macOS-Compatible-black?style=for-the-badge&logo=apple)
 
 *High-quality neural text-to-speech with 50+ voices across 9 languages*
 
+<img src="repo_assets/nj-orator-cli.png" alt="Orator CLI Screenshot">
+
 [![Orator Demo](https://img.youtube.com/vi/4V6Yej99URc/0.jpg)](https://www.youtube.com/watch?v=4V6Yej99URc)
 
-Click for Demo ☝️
+Click for Demo ☝️ [Will update the demo]
+
+#### UPDATE: Install the python package using `pip install -e .` 
 
 </div>
 
 ## ✨ Features
 
-- 🌍 **8 Languages**: American English, British English, Spanish, French, Hindi, Italian, Portuguese, Japanese, Chinese
-- 🎭 **50+ Voices**: Male and female voices with unique personalities
+- 🌍 **9 Languages**: American English, British English, Spanish, French, Hindi, Italian, Portuguese, Japanese, Chinese
+- 🎭 **55 Voices**: Male and female voices with unique personalities
 - ⚡ **Lightning Fast**: GPU-accelerated inference with streaming audio
 - 🎯 **macOS Hotkey**: Double-tap Option key ⌥ for instant TTS anywhere
 - 🔊 **High Quality**: Super high quality neural audio synthesis
@@ -35,6 +40,7 @@ Click for Demo ☝️
 
 ### 🇺🇸 American English (a)
 **Female Voices:**
+- `af` (default)
 - `af_alloy`
 - `af_aoede`
 - `af_bella`
@@ -144,6 +150,23 @@ We recommend **UV** for this project because it's:
 
 ### Installation
 
+#### Option A: Install as editable package (Recommended)
+
+1. **Clone and install the package:**
+   ```bash
+   # Clone repo
+   cd Orator
+   
+   # Create virtual environment
+   python3 -m venv .venv
+   source .venv/bin/activate  # On macOS/Linux
+   
+   # Install in editable mode
+   pip install -e .
+   ```
+
+#### Option B: Using UV (Fast alternative)
+
 1. **Install UV (if you don't have it):**
 - Assumed that python is already installed on your system.
    ```bash
@@ -161,6 +184,8 @@ We recommend **UV** for this project because it's:
    uv pip install -r requirements.txt
    ```
 
+### Additional Setup (Required for both options)
+
 3. **Install espeak-ng (required for phonemization):**
    ```bash
    # macOS
@@ -177,10 +202,10 @@ We recommend **UV** for this project because it's:
    uv pip install -U "huggingface_hub[cli]"
 
    # Download model
-   huggingface-cli download hexgrad/Kokoro-82M --include "kokoro-v1_0.pth" --local-dir .
+   huggingface-cli download hexgrad/Kokoro-82M --include "onnx/model.onnx" --local-dir ./kokoro_model_onnx/
 
    # Download voices
-   huggingface-cli download hexgrad/Kokoro-82M --include "voices/*" --local-dir .
+   huggingface-cli download onnx-community/Kokoro-82M-v1.0-ONNX --include "voices/*" --local-dir ./kokoro_model_onnx/voices
    ```
 5. **Language Pack**
 - By default "en-core-web-sm" is installed through requirements for English, navigate and install other small language packs from [spaCy](https://spacy.io/models/en).
@@ -236,22 +261,6 @@ Choose voices by language prefix:
 - `pf_*` / `pm_*` - Portuguese
 - `zf_*` / `zm_*` - Chinese
 
-## 🔧 Advanced Usage
-
-### Multi-language Support
-
-```python
-# Create pipelines for different languages
-en_pipeline = KPipeline(lang_code='a', model=model)  # American English
-es_pipeline = KPipeline(lang_code='e', model=model)  # Spanish
-ja_pipeline = KPipeline(lang_code='j', model=model)  # Japanese
-
-# Use appropriate pipeline for each language
-english_audio = list(en_pipeline("Hello world!", voice="af_bella"))[0].audio
-spanish_audio = list(es_pipeline("¡Hola mundo!", voice="ef_dora"))[0].audio
-japanese_audio = list(ja_pipeline("こんにちは世界！", voice="jf_alpha"))[0].audio
-```
-
 ## 🛠️ Troubleshooting
 
 ### Common Issues
@@ -270,7 +279,7 @@ which espeak-ng
 ```
 
 **"Model file not found"**
-- Ensure `kokoro-v1_0.pth` is in the project root
+- Ensure `kokoro-v1_0.onnx` is in the kokoro_model_onnx directory
 - Check file permissions and path
 
 **"CUDA out of memory"**
@@ -297,24 +306,6 @@ config.device = "cpu"
 - **Streaming**: Use `generate_audio_stream()` for long texts
 - **Caching**: Voice packs are cached after first load
 
-## 📁 Project Structure
-
-```
-Orator/
-├── kokoro/               # Core TTS library
-│   ├── __init__.py
-│   ├── model.py          # KModel implementation
-│   ├── pipeline.py       # KPipeline
-│   └── ...
-├── voices/               # Voice pack files (.pt)
-│   ├── af_bella.pt
-│   ├── am_adam.pt
-│   └── ...
-├── macos_tts_hotkey.py   # macOS hotkey application
-├── kokoro-v1_0.pth       # Main TTS model
-├── requirements.txt      # Python dependencies
-└── README.md             # This file
-```
 
 ## 🤝 Contributing
 
@@ -354,8 +345,27 @@ Want to help shape the future of Kokoro TTS? Here's how:
 ## 🙏 Acknowledgments
 
 - Built on the amazing [Kokoro TTS](https://github.com/hexgrad/kokoro) model
-- Powered by PyTorch and modern neural architectures
+- Powered by ONNX and modern neural architectures
 - Inspired by the need for accessible, high-quality TTS
+
+---
+
+## 📊 Repository Stats
+
+<div align="center">
+
+[![GitHub Stars](https://img.shields.io/github/stars/niranjanakella/Orator?style=for-the-badge&logo=github&color=gold)](https://github.com/niranjanakella/Orator/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/niranjanakella/Orator?style=for-the-badge&logo=git&color=blue)](https://github.com/niranjanakella/Orator/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/niranjanakella/Orator?style=for-the-badge&logo=github&color=red)](https://github.com/niranjanakella/Orator/issues)
+[![GitHub Watchers](https://img.shields.io/github/watchers/niranjanakella/Orator?style=for-the-badge&logo=github&color=teal)](https://github.com/niranjanakella/Orator/watchers)
+
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/niranjanakella/Orator?style=for-the-badge&logo=github&color=purple)](https://github.com/niranjanakella/Orator/commits)
+[![GitHub Contributors](https://img.shields.io/github/contributors/niranjanakella/Orator?style=for-the-badge&logo=github&color=green)](https://github.com/niranjanakella/Orator/graphs/contributors)
+[![GitHub Repo Size](https://img.shields.io/github/repo-size/niranjanakella/Orator?style=for-the-badge&logo=github&color=orange)](https://github.com/niranjanakella/Orator)
+
+<br/>
+
+</div>
 
 ---
 
@@ -364,4 +374,5 @@ Want to help shape the future of Kokoro TTS? Here's how:
 **Made with ❤️ for the open-source community**
 
 [![LinkedIn](https://img.shields.io/badge/Reach_Me_Out-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/niranjanakella/)
+
 </div>

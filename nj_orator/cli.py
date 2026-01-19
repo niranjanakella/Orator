@@ -45,6 +45,39 @@ def show_banner():
     click.echo(ORATOR_BANNER_LARGE)
 
 
+def show_commands_help():
+    """Display available commands with descriptions"""
+    commands_info = [
+        ("start", "Start Orator daemon with menu bar icon and TTS engine"),
+        ("stop", "Stop Orator daemon and TTS engine"),
+        ("status", "Check Orator daemon status"),
+        ("restart", "Restart Orator daemon"),
+        ("config trigger", "Record hotkey for trigger action"),
+        ("config pause", "Record hotkey for pause action"),
+        ("config stop", "Record hotkey for stop action"),
+        ("config list", "List current hotkey configurations"),
+        ("log", "Show last N lines of Orator log file"),
+    ]
+    
+    click.echo()
+    click.echo(f"\033[38;5;183m  ┌─────────────────────────────────────────────────────────────┐\033[0m")
+    click.echo(f"\033[38;5;183m  │\033[0m  \033[1;38;5;147mAvailable Commands\033[0m                                      \033[38;5;183m│\033[0m")
+    click.echo(f"\033[38;5;183m  └─────────────────────────────────────────────────────────────┘\033[0m")
+    click.echo()
+    
+    for cmd, desc in commands_info:
+        # Format command name with color
+        cmd_formatted = f"\033[38;5;147m{cmd:<20}\033[0m"
+        # Format description
+        desc_formatted = f"\033[38;5;245m{desc}\033[0m"
+        click.echo(f"    {cmd_formatted}  {desc_formatted}")
+    
+    click.echo()
+    click.echo(f"  \033[38;5;245mFor more information on a command, use:\033[0m")
+    click.echo(f"  \033[38;5;147m  orator <command> --help\033[0m")
+    click.echo()
+
+
 @click.group(invoke_without_command=True)
 @click.pass_context
 def cli(ctx):
@@ -52,6 +85,7 @@ def cli(ctx):
     # If no command provided, show elegant help
     if ctx.invoked_subcommand is None:
         show_banner()
+        show_commands_help()
 
 
 @cli.command()
