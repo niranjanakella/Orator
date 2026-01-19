@@ -1,10 +1,11 @@
 {
-  "model_path": "kokoro-v1_0.pth",
-  "voices_dir": "voices",
-  "voice": "bf_isabella",
+  "model_path": "kokoro_model_onnx/kokoro-v1_0.onnx",
+  "tokenizer_path": "kokoro_model_onnx/tokenizer.json",
+  "voices_dir": "kokoro_model_onnx/voices",
+  "voice": "af_bella",
   "hotkey_timeout": 0.5,
   "max_text_length": null,
-  "device": "auto",
+  "device": "mps",
   "log_level": "INFO",
   "speed": 1.0,
   "_comment": "Press Escape key to stop TTS playback at any time"

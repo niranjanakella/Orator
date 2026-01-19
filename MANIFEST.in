@@ -1,0 +1,8 @@
+include README.md
+include LICENSE
+include requirements.txt
+include config_hotkey.json
+recursive-include kokoro_model_onnx *
+recursive-include nj_orator *.png
+recursive-include nj_orator *.json
+

@@ -1,29 +1,24 @@
 # Core Dependencies
-torch>=2.5.1
-numpy>=2.3.3
+numpy>=1.24.0
 soundfile>=0.13.1
 
-# TTS Library
-kokoro>=0.9.4
-
-# Text Processing
-phonemizer-fork==3.3.2
-
-#pyopenjtalk==0.4.1
-#fugashi==1.5.1
-#jaconv==0.4.0
-#mojimoji==0.0.13
-#mecab-python3==1.0.10
+# ONNX Runtime (for TTS inference - no PyTorch dependency)
+onnxruntime>=1.18.0
 
 # Audio & System Integration
 pygame>=2.6.1
 pynput>=1.8.1
 pyperclip>=1.11.0
 
+# macOS Menu Bar
+rumps>=0.4.0
+
 # Utilities
 loguru>=0.7.3
-huggingface-hub>=0.35.1
-pyobjc==11.1
+pyobjc>=10.0
 
-# Basic PIP
-pip==25.2
+# CLI Framework
+click>=8.0.0
+
+# System Requirement (not pip installable):
+# espeak-ng - Install via: brew install espeak-ng (macOS) or apt install espeak-ng (Linux)
